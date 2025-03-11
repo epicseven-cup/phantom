@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 class PostIt extends StatelessWidget {
   const PostIt({super.key});
 
+  // TODO: Use this to make a draggable https://docs.flutter.dev/cookbook/animation/physics-simulation
+
   @override
   Widget build(BuildContext context) {
     return Card(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:phantom_flutter/component/postit.dart';
 
+import 'component/createPostit.dart';
+
 void main() {
   runApp(const Phantom());
 }
@@ -56,6 +58,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _counter = 0;
+  bool _visable = false;
+
+  void _changeVisable(){
+    setState(() {
+      this._visable = !this._visable;
+    });
+  }
 
 
   void _incrementCounter() {
@@ -82,23 +91,29 @@ class _HomePageState extends State<HomePage> {
         // TRY THIS: Try changing the color here to a specific color (to
         // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
         // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme
+            .of(context)
+            .colorScheme
+            .inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(100.0),
-        child: Container(color: Colors.amber, child: PostIt()),
-      ),
-
-
+      body: Builder(builder: (context) {
+        if (this._visable) {
+          return CreatePostIt();
+        }
+          return Padding(
+            padding: EdgeInsets.all(100.0),
+            child: Container(color: Colors.amber, child: PostIt()),
+          );
+      }),
 
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Create new post-it',
-        child: const Icon(Icons.add), // icon used
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      onPressed: this._changeVisable,
+      tooltip: 'Create new post-it',
+      child: const Icon(Icons.add), // icon used
+    ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

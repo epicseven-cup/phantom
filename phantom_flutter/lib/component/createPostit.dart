@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 class CreatePostIt extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -16,7 +15,7 @@ class CreatePostIt extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TextFormField(
-            decoration: const InputDecoration(hintText: 'Enter your email'),
+            decoration: const InputDecoration(hintText: 'Enter your notes'),
             validator: (String? value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter some text';

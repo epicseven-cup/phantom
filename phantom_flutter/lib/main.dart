@@ -57,6 +57,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _counter = 0;
 
+
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -87,13 +88,16 @@ class _HomePageState extends State<HomePage> {
         title: Text(widget.title),
       ),
       body: Padding(
-        padding: EdgeInsets.all(25.0),
+        padding: EdgeInsets.all(100.0),
         child: Container(color: Colors.amber, child: PostIt()),
       ),
+
+
+
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        tooltip: 'Create new post-it',
+        child: const Icon(Icons.add), // icon used
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }

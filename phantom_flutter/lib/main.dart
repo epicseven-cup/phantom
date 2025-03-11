@@ -86,7 +86,10 @@ class _HomePageState extends State<HomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Expanded(child: PostIt()),
+      body: Padding(
+        padding: EdgeInsets.all(25.0),
+        child: Container(color: Colors.amber, child: PostIt()),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',

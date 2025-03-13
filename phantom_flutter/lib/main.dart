@@ -1,5 +1,9 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:phantom_flutter/component/DraggableComponent.dart';
 import 'package:phantom_flutter/component/postit.dart';
+import 'package:phantom_flutter/router.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'component/createPostit.dart';
 
@@ -60,23 +64,20 @@ class _HomePageState extends State<HomePage> {
   int _counter = 0;
   bool _visable = false;
 
+  final channel = WebSocketChannel.connect(
+    Uri.parse(WebSocketRouter.websocket),
+  );
+
+
+
+
+
   void _changeVisable(){
     setState(() {
       this._visable = !this._visable;
     });
   }
 
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,10 +104,12 @@ class _HomePageState extends State<HomePage> {
         if (this._visable) {
           return CreatePostIt();
         }
-          return Padding(
-            padding: EdgeInsets.all(100.0),
-            child: Container(color: Colors.amber, child: PostIt()),
-          );
+          return Dismissible(key: UniqueKey(), child: DraggableCard(
+              child: StreamBuilder(stream: channel.stream, builder: (context, snapshot) {
+                return PostIt.fromJson(snapshot.hasData ? snapshot.data : {});
+              })
+          ) );
+
       }),
 
       floatingActionButton: FloatingActionButton(

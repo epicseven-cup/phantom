@@ -2,13 +2,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PostIt extends StatelessWidget {
-  const PostIt({super.key});
+  final String content;
+  const PostIt({required this.content, super.key});
 
-  // TODO: Use this to make a draggable https://docs.flutter.dev/cookbook/animation/physics-simulation
+
+  factory PostIt.fromJson(Map<String, dynamic> json) {
+    return switch (json) {
+      {'content': String content} => PostIt(content: content),
+    _ => throw const FormatException("Incorrect format for PostIt"),
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return SizedBox(
+      height: 400,
+      width: 400,
+      child: Center(
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -27,6 +37,7 @@ class PostIt extends StatelessWidget {
             ),
           ],
         ),
+      ),
     );
   }
 }

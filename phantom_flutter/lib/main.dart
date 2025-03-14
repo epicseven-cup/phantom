@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:phantom_flutter/component/DraggableComponent.dart';
@@ -61,23 +63,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _counter = 0;
   bool _visable = false;
 
-  final channel = WebSocketChannel.connect(
+  final _channel = WebSocketChannel.connect(
     Uri.parse(WebSocketRouter.websocket),
   );
 
-
-
-
-
-  void _changeVisable(){
+  void _changeVisable() {
     setState(() {
       this._visable = !this._visable;
     });
   }
 
+  var post = <Widget>[];
 
   @override
   Widget build(BuildContext context) {
@@ -92,31 +90,39 @@ class _HomePageState extends State<HomePage> {
         // TRY THIS: Try changing the color here to a specific color (to
         // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
         // change color while the other colors stay the same.
-        backgroundColor: Theme
-            .of(context)
-            .colorScheme
-            .inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Builder(builder: (context) {
-        if (this._visable) {
-          return CreatePostIt();
-        }
-          return Dismissible(key: UniqueKey(), child: DraggableCard(
-              child: StreamBuilder(stream: channel.stream, builder: (context, snapshot) {
-                return PostIt.fromJson(snapshot.hasData ? snapshot.data : {});
-              })
-          ) );
+      body: Builder(
+        builder: (context) {
+          if (this._visable) {
+            return CreatePostIt();
+          }
 
-      }),
+          StreamBuilder(
+            stream: _channel.stream,
+            builder: (context, snapshot) {
+              this.post.add(
+                Dismissible(
+                  key: UniqueKey(),
+                  child: DraggableCard(child: PostIt.fromJson(snapshot.data)),
+                ),
+              );
+              return snapshot.data;
+            },
+          );
+
+          return Stack(children: post);
+        },
+      ),
 
       floatingActionButton: FloatingActionButton(
-      onPressed: this._changeVisable,
-      tooltip: 'Create new post-it',
-      child: const Icon(Icons.add), // icon used
-    ), // This trailing comma makes auto-formatting nicer for build methods.
+        onPressed: this._changeVisable,
+        tooltip: 'Create new post-it',
+        child: const Icon(Icons.add), // icon used
+      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

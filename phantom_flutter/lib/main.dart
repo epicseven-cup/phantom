@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:phantom_flutter/component/DraggableComponent.dart';
 import 'package:phantom_flutter/component/postit.dart';
 import 'package:phantom_flutter/router.dart';
@@ -70,7 +71,6 @@ class _HomePageState extends State<HomePage> {
     Uri.parse(WebSocketRouter.websocket),
   );
 
-
   void _changeVisable() {
     setState(() {
       _visable = !_visable;
@@ -90,18 +90,30 @@ class _HomePageState extends State<HomePage> {
 
     _channel.stream.listen((message) {
       setState(() {
-        _post = _post +
-            [Dismissible(
-              key: UniqueKey(),
-              child: DraggableCard(child: PostIt.fromJson(
-                  jsonDecode(message))),
-            )
+        _post =
+            _post +
+            [
+              Dismissible(
+                key: UniqueKey(),
+                onDismissed: (DismissDirection direction) {
+                  print("Hello");
+                  // For some reason everything after setState is not called
+                  setState(() {
+                    _post.removeLast();
+                  });
+                  print("After setState");
+
+                  _channel.sink.add(jsonEncode({"request_post": 1}));
+                },
+                child: DraggableCard(
+                  child: PostIt.fromJson(jsonDecode(message)),
+                ),
+              ),
             ];
       });
     });
 
     _channel.sink.add(jsonEncode({"request_post": 3}));
-
   }
 
   @override
@@ -117,10 +129,7 @@ class _HomePageState extends State<HomePage> {
         // TRY THIS: Try changing the color here to a specific color (to
         // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
         // change color while the other colors stay the same.
-        backgroundColor: Theme
-            .of(context)
-            .colorScheme
-            .inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
@@ -130,8 +139,6 @@ class _HomePageState extends State<HomePage> {
           if (_visable) {
             return CreatePostIt();
           }
-
-
 
           return Stack(children: _post);
           // return StreamBuilder(
@@ -157,9 +164,6 @@ class _HomePageState extends State<HomePage> {
           //     return ListView(children: _post);
           //   },
           // );
-
-
-
         },
       ),
 

@@ -16,8 +16,8 @@ class PostIt extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 400,
-      width: 400,
+      height: 600,
+      width: 600,
       child: Center(
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.center,

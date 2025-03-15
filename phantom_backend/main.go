@@ -6,7 +6,11 @@ import (
 	"net/http"
 )
 
-var upgrader = websocket.Upgrader{}
+var upgrader = websocket.Upgrader{
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
+}
 
 func streamPostIt(w http.ResponseWriter, r *http.Request) {
 	c, err := upgrader.Upgrade(w, r, nil)
@@ -31,5 +35,8 @@ func streamPostIt(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	http.HandleFunc("/postit", streamPostIt)
-	http.ListenAndServe("localhost:3001", nil)
+	err := http.ListenAndServe("localhost:3001", nil)
+	if err != nil {
+		return
+	}
 }

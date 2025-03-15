@@ -37,7 +37,7 @@ class Phantom extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
       ),
       home: const HomePage(title: 'Phantom'),
     );
@@ -71,11 +71,11 @@ class _HomePageState extends State<HomePage> {
 
   void _changeVisable() {
     setState(() {
-      this._visable = !this._visable;
+      _visable = !_visable;
     });
   }
 
-  var post = <Widget>[];
+  final _post = <Widget>[];
 
   @override
   Widget build(BuildContext context) {
@@ -97,24 +97,22 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Builder(
         builder: (context) {
-          if (this._visable) {
+          if (_visable) {
             return CreatePostIt();
           }
 
-          StreamBuilder(
+          return StreamBuilder(
             stream: _channel.stream,
             builder: (context, snapshot) {
-              this.post.add(
+              _post.add(
                 Dismissible(
                   key: UniqueKey(),
                   child: DraggableCard(child: PostIt.fromJson(snapshot.data)),
                 ),
               );
-              return snapshot.data;
+              return Stack(children: _post);
             },
           );
-
-          return Stack(children: post);
         },
       ),
 

@@ -30,7 +30,7 @@ class PostIt extends StatelessWidget {
             Expanded(
               child: Center(
                 child: Text(
-                  "I love pineapple on pizza",
+                  content,
                   style: TextStyle(fontSize: 30),
                 ),
               ),

@@ -75,7 +75,12 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  final _post = <Widget>[];
+  final _post = <Widget>[
+    Dismissible(
+      key: UniqueKey(),
+      child: DraggableCard(child: PostIt(content: "Hello world")),
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -104,12 +109,18 @@ class _HomePageState extends State<HomePage> {
           return StreamBuilder(
             stream: _channel.stream,
             builder: (context, snapshot) {
-              _post.add(
-                Dismissible(
-                  key: UniqueKey(),
-                  child: DraggableCard(child: PostIt.fromJson(snapshot.data)),
-                ),
-              );
+              if (snapshot.hasData) {
+                setState(() {
+                  _post.add(
+                    Dismissible(
+                      key: UniqueKey(),
+                      child: DraggableCard(child: PostIt.fromJson(
+                          snapshot.data)),
+                    ),
+                  );
+                });
+              }
+
               return Stack(children: _post);
             },
           );

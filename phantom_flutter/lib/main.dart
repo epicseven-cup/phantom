@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:phantom_flutter/component/DraggableComponent.dart';
@@ -69,18 +70,39 @@ class _HomePageState extends State<HomePage> {
     Uri.parse(WebSocketRouter.websocket),
   );
 
+
   void _changeVisable() {
     setState(() {
       _visable = !_visable;
     });
   }
 
-  final _post = <Widget>[
+  late var _post = <Widget>[
     Dismissible(
       key: UniqueKey(),
       child: DraggableCard(child: PostIt(content: "Hello world")),
     ),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _channel.stream.listen((message) {
+      setState(() {
+        _post = _post +
+            [Dismissible(
+              key: UniqueKey(),
+              child: DraggableCard(child: PostIt.fromJson(
+                  jsonDecode(message))),
+            )
+            ];
+      });
+    });
+
+    _channel.sink.add(jsonEncode({"request_post": 3}));
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +117,10 @@ class _HomePageState extends State<HomePage> {
         // TRY THIS: Try changing the color here to a specific color (to
         // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
         // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme
+            .of(context)
+            .colorScheme
+            .inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
@@ -106,24 +131,35 @@ class _HomePageState extends State<HomePage> {
             return CreatePostIt();
           }
 
-          return StreamBuilder(
-            stream: _channel.stream,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                setState(() {
-                  _post.add(
-                    Dismissible(
-                      key: UniqueKey(),
-                      child: DraggableCard(child: PostIt.fromJson(
-                          snapshot.data)),
-                    ),
-                  );
-                });
-              }
 
-              return Stack(children: _post);
-            },
-          );
+
+          return Stack(children: _post);
+          // return StreamBuilder(
+          //   stream: _channel.stream,
+          //   builder: (context, snapshot) {
+          //     if (snapshot.hasData) {
+          //       _post = _post +
+          //           [Dismissible(
+          //             key: UniqueKey(),
+          //             child: DraggableCard(child: PostIt.fromJson(
+          //                 jsonDecode(snapshot.data))),
+          //           )
+          //           ];
+          //       if (kDebugMode) {
+          //         print("Hit");
+          //       }
+          //
+          //       _channel.sink.add(jsonEncode({"request_post": 3}));
+          //     }
+          //     if (kDebugMode) {
+          //       print(snapshot.connectionState);
+          //     }
+          //     return ListView(children: _post);
+          //   },
+          // );
+
+
+
         },
       ),
 

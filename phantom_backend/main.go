@@ -16,6 +16,10 @@ type Message struct {
 	Content string `json:"content"`
 }
 
+type IncomingMessage struct {
+	RequestPost int `json:"request_post"`
+}
+
 func streamPostIt(w http.ResponseWriter, r *http.Request) {
 	c, err := upgrader.Upgrade(w, r, nil)
 
@@ -26,20 +30,25 @@ func streamPostIt(w http.ResponseWriter, r *http.Request) {
 	defer c.Close()
 
 	for {
-		//mt, message, err := c.ReadMessage()
-		//if err != nil {
-		//	log.Print("Error when reading: ", err)
-		//}
-		//
-		//log.Print("Mesasge Type: ", mt)
-		//log.Print("Mesasge: : ", message)
-
-		data := Message{Content: "Hello world"}
-
-		err = c.WriteJSON(data)
+		msg := IncomingMessage{}
+		err := c.ReadJSON(&msg)
 		if err != nil {
-			log.Print(err)
-			return
+			log.Print("Error when reading: ", err)
+		}
+
+		log.Print("Message: : ", msg)
+
+		if msg.RequestPost > 0 {
+			for range msg.RequestPost {
+				data := Message{Content: "Hello world"}
+
+				err = c.WriteJSON(data)
+				if err != nil {
+					log.Print(err)
+					return
+				}
+
+			}
 		}
 
 	}

@@ -37,7 +37,7 @@ func streamPostIt(w http.ResponseWriter, r *http.Request) {
 
 	defer c.Close()
 
-	seen := map[int]bool{} // id as key
+	seen := map[int]bool{0: true} // id as key
 	for {
 		msg := IncomingMessage{}
 		err := c.ReadJSON(&msg)
@@ -53,36 +53,33 @@ func streamPostIt(w http.ResponseWriter, r *http.Request) {
 			for k := range seen {
 				keys = append(keys, k)
 			}
-			rows, err := conn.Query(context.Background(), "SELECT id, content FROM posts WHERE id NOT IN ($1) LIMIT $2", keys, msg.RequestPost)
-			println("HIt")
+			rows, err := conn.Query(context.Background(), "SELECT id, content FROM posts WHERE id != ANY ($1) LIMIT ($2)", keys, msg.RequestPost)
 			if err != nil {
 				log.Fatalln(err)
 				return
 			}
 
 			for rows.Next() {
-				var content string
 				var id int
-				err := rows.Scan(&content)
+				var content string
+				err := rows.Scan(&id, &content)
 
 				if err != nil {
 					log.Fatalln(err)
 					return
 				}
+				_, ok := seen[id]
+				if !ok {
 
-				err = rows.Scan(&id)
-				if err != nil {
-					log.Fatalln(err)
-					return
-				}
-				data := Message{Content: content}
-				err = c.WriteJSON(data)
-				if err != nil {
-					log.Print(err)
-					return
-				}
+					data := Message{Content: content}
+					err = c.WriteJSON(data)
+					if err != nil {
+						log.Print(err)
+						return
+					}
 
-				seen[id] = true
+					seen[id] = true
+				}
 			}
 			rows.Close()
 		}
@@ -93,19 +90,20 @@ func streamPostIt(w http.ResponseWriter, r *http.Request) {
 
 func createPost(w http.ResponseWriter, r *http.Request) {
 	msg := Message{}
-	body, err := r.GetBody()
-	if err != nil {
-		log.Fatalln(err)
-		return
-	}
+	body := r.Body
+	//if err != nil {
+	//	log.Fatalln(err)
+	//	return
+	//}
 	decoder := json.NewDecoder(body)
-	err = decoder.Decode(&msg)
+	err := decoder.Decode(&msg)
 	if err != nil {
 		return
 	}
 
 	rows, err := conn.Query(context.Background(), "INSERT INTO posts (content) VALUES ($1)", msg.Content)
 	if err != nil {
+		log.Fatalln(err)
 		return
 	}
 	defer rows.Close()
@@ -118,12 +116,20 @@ func main() {
 	//if err != nil {
 	//	log.Fatalln(err)
 	//}
-	conn, err := pgxpool.New(context.Background(), "postgres://postgres:example@localhost:5432/postgres")
+	conn, _ = pgxpool.New(context.Background(), "postgres://postgres:example@localhost:5432/postgres")
+	err := conn.Ping(context.Background())
 	if err != nil {
 		log.Fatalln(err)
 		return
 	}
-	_, err = conn.Query(context.Background(), "CREATE TABLE posts (id integer PRIMARY KEY UNIQUE, content TEXT NOT NULL)")
+
+	_, err = conn.Query(context.Background(), "CREATE TABLE posts (id SERIAL, content TEXT NOT NULL)")
+	if err != nil {
+		log.Fatalln(err)
+		return
+	}
+
+	err = conn.Ping(context.Background())
 	if err != nil {
 		log.Fatalln(err)
 		return

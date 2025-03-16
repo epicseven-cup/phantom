@@ -53,7 +53,7 @@ func streamPostIt(w http.ResponseWriter, r *http.Request) {
 			for k := range seen {
 				keys = append(keys, k)
 			}
-			rows, err := conn.Query(context.Background(), "SELECT id, content FROM posts WHERE id != ANY ($1) LIMIT ($2)", keys, msg.RequestPost)
+			rows, err := conn.Query(context.Background(), "SELECT id, content FROM posts WHERE NOT (id = ANY ($1) ) LIMIT ($2)", keys, msg.RequestPost)
 			if err != nil {
 				log.Fatalln(err)
 				return
@@ -63,6 +63,7 @@ func streamPostIt(w http.ResponseWriter, r *http.Request) {
 				var id int
 				var content string
 				err := rows.Scan(&id, &content)
+				log.Println(id)
 
 				if err != nil {
 					log.Fatalln(err)

@@ -96,13 +96,6 @@ class _HomePageState extends State<HomePage> {
               Dismissible(
                 key: UniqueKey(),
                 onDismissed: (DismissDirection direction) {
-                  print("Hello");
-                  // For some reason everything after setState is not called
-                  setState(() {
-                    _post.removeLast();
-                  });
-                  print("After setState");
-
                   _channel.sink.add(jsonEncode({"request_post": 1}));
                 },
                 child: DraggableCard(
@@ -141,29 +134,6 @@ class _HomePageState extends State<HomePage> {
           }
 
           return Stack(children: _post);
-          // return StreamBuilder(
-          //   stream: _channel.stream,
-          //   builder: (context, snapshot) {
-          //     if (snapshot.hasData) {
-          //       _post = _post +
-          //           [Dismissible(
-          //             key: UniqueKey(),
-          //             child: DraggableCard(child: PostIt.fromJson(
-          //                 jsonDecode(snapshot.data))),
-          //           )
-          //           ];
-          //       if (kDebugMode) {
-          //         print("Hit");
-          //       }
-          //
-          //       _channel.sink.add(jsonEncode({"request_post": 3}));
-          //     }
-          //     if (kDebugMode) {
-          //       print(snapshot.connectionState);
-          //     }
-          //     return ListView(children: _post);
-          //   },
-          // );
         },
       ),
 

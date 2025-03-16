@@ -5,7 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e8adb38e-3bf3-48bc-ba13-da25b3f6da3b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/phantom_backend/compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/phantom_backend/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/phantom_backend/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/phantom_backend/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/phantom_backend/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/phantom_backend/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/phantom_backend/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/phantom_flutter/lib/component/createPostit.dart" beforeDir="false" afterPath="$PROJECT_DIR$/phantom_flutter/lib/component/createPostit.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/phantom_flutter/lib/component/postit.dart" beforeDir="false" afterPath="$PROJECT_DIR$/phantom_flutter/lib/component/postit.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/phantom_flutter/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/phantom_flutter/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/phantom_flutter/lib/router.dart" beforeDir="false" afterPath="$PROJECT_DIR$/phantom_flutter/lib/router.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,6 +34,10 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
 }</component>
@@ -37,6 +49,7 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
+    &quot;Docker.phantom_backend/compose.yml.db: Compose Deployment.executor&quot;: &quot;Run&quot;,
     &quot;Go Build.go build github.com/epicseven-cup/phantom/tree/main/phantom_backend.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
@@ -59,9 +72,14 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;dart.settings&quot;,
     &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
+    ]
   }
 }</component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Go Build.go build github.com/epicseven-cup/phantom/tree/main/phantom_backend">
     <configuration name="go build github.com/epicseven-cup/phantom/tree/main/phantom_backend" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="phantom" />
       <working_directory value="$PROJECT_DIR$/phantom_backend" />
@@ -71,9 +89,30 @@
       <filePath value="$PROJECT_DIR$/phantom_backend/main.go" />
       <method v="2" />
     </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="phantom_backend/compose.yml.db: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="envFilePath" value="" />
+          <option name="services">
+            <list>
+              <option value="db" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="phantom_backend/compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Go Build.go build github.com/epicseven-cup/phantom/tree/main/phantom_backend" />
+        <item itemvalue="Docker.phantom_backend/compose.yml.db: Compose Deployment" />
       </list>
     </recent_temporary>
   </component>

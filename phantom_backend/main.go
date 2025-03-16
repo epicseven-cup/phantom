@@ -1,7 +1,10 @@
 package main
 
 import (
+	"context"
+	"encoding/json"
 	"github.com/gorilla/websocket"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"log"
 	"net/http"
 )
@@ -12,6 +15,8 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
+var conn *pgxpool.Pool
+
 type Message struct {
 	Content string `json:"content"`
 }
@@ -21,43 +26,113 @@ type IncomingMessage struct {
 }
 
 func streamPostIt(w http.ResponseWriter, r *http.Request) {
+
+	//go func() {
 	c, err := upgrader.Upgrade(w, r, nil)
 
 	if err != nil {
 		log.Print("Upgrade: ", err)
+		return
 	}
 
 	defer c.Close()
 
+	seen := map[int]bool{} // id as key
 	for {
 		msg := IncomingMessage{}
 		err := c.ReadJSON(&msg)
 		if err != nil {
 			log.Print("Error when reading: ", err)
+			return
 		}
 
 		log.Print("Message: : ", msg)
 
 		if msg.RequestPost > 0 {
-			for range msg.RequestPost {
-				data := Message{Content: "Hello world"}
+			var keys []int
+			for k := range seen {
+				keys = append(keys, k)
+			}
+			rows, err := conn.Query(context.Background(), "SELECT id, content FROM posts WHERE id NOT IN ($1) LIMIT $2", keys, msg.RequestPost)
+			println("HIt")
+			if err != nil {
+				log.Fatalln(err)
+				return
+			}
 
+			for rows.Next() {
+				var content string
+				var id int
+				err := rows.Scan(&content)
+
+				if err != nil {
+					log.Fatalln(err)
+					return
+				}
+
+				err = rows.Scan(&id)
+				if err != nil {
+					log.Fatalln(err)
+					return
+				}
+				data := Message{Content: content}
 				err = c.WriteJSON(data)
 				if err != nil {
 					log.Print(err)
 					return
 				}
 
+				seen[id] = true
 			}
+			rows.Close()
 		}
 
 	}
+	//}
+}
+
+func createPost(w http.ResponseWriter, r *http.Request) {
+	msg := Message{}
+	body, err := r.GetBody()
+	if err != nil {
+		log.Fatalln(err)
+		return
+	}
+	decoder := json.NewDecoder(body)
+	err = decoder.Decode(&msg)
+	if err != nil {
+		return
+	}
+
+	rows, err := conn.Query(context.Background(), "INSERT INTO posts (content) VALUES ($1)", msg.Content)
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.WriteHeader(http.StatusCreated)
 }
 
 func main() {
-	http.HandleFunc("/postit", streamPostIt)
-	err := http.ListenAndServe("localhost:3001", nil)
+	//conn, err := pgx.Connect(context.Background(), "postgres://postgres:example@localhost:5432/postgres")
+	//if err != nil {
+	//	log.Fatalln(err)
+	//}
+	conn, err := pgxpool.New(context.Background(), "postgres://postgres:example@localhost:5432/postgres")
 	if err != nil {
+		log.Fatalln(err)
+		return
+	}
+	_, err = conn.Query(context.Background(), "CREATE TABLE posts (id integer PRIMARY KEY UNIQUE, content TEXT NOT NULL)")
+	if err != nil {
+		log.Fatalln(err)
+		return
+	}
+	http.HandleFunc("/postit", streamPostIt)
+	http.HandleFunc("/create", createPost)
+	err = http.ListenAndServe("localhost:3001", nil)
+	if err != nil {
+		log.Fatalln(err)
 		return
 	}
 }

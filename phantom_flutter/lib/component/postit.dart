@@ -1,5 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+import 'package:phantom_flutter/component/postit.dart';
+
+import 'package:phantom_flutter/router.dart' as router;
 
 class PostIt extends StatelessWidget {
   final String content;
@@ -25,7 +32,7 @@ class PostIt extends StatelessWidget {
             const ListTile(
               leading: Icon(Icons.account_box_rounded),
               title: Text("This is a user account"),
-              subtitle: Text("This is user's secert"),
+              subtitle: Text("This is user's secret"),
             ),
             Expanded(
               child: Center(

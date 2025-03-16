@@ -5,9 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e8adb38e-3bf3-48bc-ba13-da25b3f6da3b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/phantom_backend/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/phantom_backend/compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/phantom_backend/compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/phantom_backend/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/phantom_backend/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/phantom_flutter/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/phantom_flutter/android/app/src/main/AndroidManifest.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,6 +22,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Go File" />
+        <option value="Dockerfile" />
       </list>
     </option>
   </component>

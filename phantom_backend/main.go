@@ -7,6 +7,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"log"
 	"net/http"
+	"os"
 )
 
 var upgrader = websocket.Upgrader{
@@ -86,7 +87,6 @@ func streamPostIt(w http.ResponseWriter, r *http.Request) {
 		}
 
 	}
-	//}
 }
 
 func createPost(w http.ResponseWriter, r *http.Request) {
@@ -114,7 +114,7 @@ func main() {
 	//if err != nil {
 	//	log.Fatalln(err)
 	//}
-	conn, _ = pgxpool.New(context.Background(), "postgres://postgres:example@localhost:5432/postgres")
+	conn, _ = pgxpool.New(context.Background(), os.Getenv("POSTGRES_URI"))
 	err := conn.Ping(context.Background())
 	if err != nil {
 		log.Fatalln(err)

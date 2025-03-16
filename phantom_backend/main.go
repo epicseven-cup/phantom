@@ -92,10 +92,7 @@ func streamPostIt(w http.ResponseWriter, r *http.Request) {
 func createPost(w http.ResponseWriter, r *http.Request) {
 	msg := Message{}
 	body := r.Body
-	//if err != nil {
-	//	log.Fatalln(err)
-	//	return
-	//}
+
 	decoder := json.NewDecoder(body)
 	err := decoder.Decode(&msg)
 	if err != nil {

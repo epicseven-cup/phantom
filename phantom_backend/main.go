@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
 var upgrader = websocket.Upgrader{
@@ -66,6 +67,9 @@ func streamPostIt(w http.ResponseWriter, r *http.Request) {
 				err := rows.Scan(&id, &content)
 				log.Println(id)
 
+				content = strings.Replace(content, "<", "&lt;", -1)
+				content = strings.Replace(content, ">", "&gt;", -1)
+				content = strings.Replace(content, "&", "&amp;", -1)
 				if err != nil {
 					log.Fatalln(err)
 					return
@@ -95,11 +99,15 @@ func createPost(w http.ResponseWriter, r *http.Request) {
 
 	decoder := json.NewDecoder(body)
 	err := decoder.Decode(&msg)
+
+	content := strings.Replace(msg.Content, "<", "&lt;", -1)
+	content = strings.Replace(content, ">", "&gt;", -1)
+	content = strings.Replace(content, "&", "&amp;", -1)
 	if err != nil {
 		return
 	}
 
-	rows, err := conn.Query(context.Background(), "INSERT INTO posts (content) VALUES ($1)", msg.Content)
+	rows, err := conn.Query(context.Background(), "INSERT INTO posts (content) VALUES ($1)", content)
 	if err != nil {
 		log.Fatalln(err)
 		return
@@ -134,7 +142,7 @@ func main() {
 	}
 	http.HandleFunc("/postit", streamPostIt)
 	http.HandleFunc("/create", createPost)
-	err = http.ListenAndServe("localhost:3001", nil)
+	err = http.ListenAndServe("0.0.0.0:3001", nil)
 	if err != nil {
 		log.Fatalln(err)
 		return

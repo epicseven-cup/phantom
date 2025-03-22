@@ -67,9 +67,9 @@ func streamPostIt(w http.ResponseWriter, r *http.Request) {
 				err := rows.Scan(&id, &content)
 				log.Println(id)
 
+				//content = strings.Replace(content, "&", "&amp;", -1)
 				content = strings.Replace(content, "<", "&lt;", -1)
 				content = strings.Replace(content, ">", "&gt;", -1)
-				content = strings.Replace(content, "&", "&amp;", -1)
 				if err != nil {
 					log.Fatalln(err)
 					return
@@ -100,9 +100,9 @@ func createPost(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(body)
 	err := decoder.Decode(&msg)
 
-	content := strings.Replace(msg.Content, "<", "&lt;", -1)
+	content := strings.Replace(msg.Content, "&", "&amp;", -1)
+	content = strings.Replace(content, "<", "&lt;", -1)
 	content = strings.Replace(content, ">", "&gt;", -1)
-	content = strings.Replace(content, "&", "&amp;", -1)
 	if err != nil {
 		return
 	}

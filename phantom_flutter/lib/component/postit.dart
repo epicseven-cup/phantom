@@ -15,7 +15,8 @@ class PostIt extends StatelessWidget {
 
   factory PostIt.fromJson(Map<String, dynamic> json) {
     return switch (json) {
-      {'content': String content} => PostIt(content: content),
+      {'content': String content} =>
+        PostIt(content: content.replaceAll("&", "&amp").replaceAll("<", "&lt").replaceAll(">", "&gt")),
     _ => throw const FormatException("Incorrect format for PostIt"),
     };
   }

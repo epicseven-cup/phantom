@@ -79,6 +79,9 @@ class _HomePageState extends State<HomePage>
   late var _post = <Dismissible>[
     Dismissible(
       key: UniqueKey(),
+      onDismissed: (DismissDirection direction) {
+        _channel.sink.add(jsonEncode({"request_post": 1}));
+      },
       child: DraggableCard(child: PostIt(content: "Hello world")),
     ),
   ];

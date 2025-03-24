@@ -32,8 +32,8 @@ class PostIt extends StatelessWidget {
           children: <Widget>[
             const ListTile(
               leading: Icon(Icons.account_box_rounded),
-              title: Text("This is a user account"),
-              subtitle: Text("This is user's secret"),
+              title: Text("Anonymous"),
+              subtitle: Text("anonymous user's comment"),
             ),
             Expanded(
               child: Center(

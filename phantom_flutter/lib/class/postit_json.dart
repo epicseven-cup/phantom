@@ -8,7 +8,8 @@ class PostItJson {
 
   factory PostItJson.fromJson(Map<String, dynamic> json) {
     return switch (json) {
-      {'content': String content} => PostItJson(content: content),
+      {'content': String content} =>
+          PostItJson(content: content),
       _ => throw const FormatException("Incorrect format for PostIt"),
     };
   }

@@ -19,6 +19,8 @@ var upgrader = websocket.Upgrader{
 
 var conn *pgxpool.Pool
 
+var connCollection []*websocket.Conn = []*websocket.Conn{}
+
 type Message struct {
 	Content string `json:"content"`
 }
@@ -38,6 +40,7 @@ func streamPostIt(w http.ResponseWriter, r *http.Request) {
 	}
 
 	defer c.Close()
+	connCollection = append(connCollection, c)
 
 	seen := map[int]bool{0: true} // id as key
 	for {
@@ -67,7 +70,6 @@ func streamPostIt(w http.ResponseWriter, r *http.Request) {
 				err := rows.Scan(&id, &content)
 				log.Println(id)
 
-				//content = strings.Replace(content, "&", "&amp;", -1)
 				content = strings.Replace(content, "<", "&lt;", -1)
 				content = strings.Replace(content, ">", "&gt;", -1)
 				if err != nil {
@@ -113,6 +115,17 @@ func createPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer rows.Close()
+
+	for i := range connCollection {
+		c := connCollection[i]
+		request := IncomingMessage{RequestPost: 1}
+		err = c.WriteJSON(request)
+		if err != nil {
+			log.Fatalln(err)
+			return
+		}
+	}
+
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(http.StatusCreated)
 }

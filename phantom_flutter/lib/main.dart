@@ -75,14 +75,13 @@ class _HomePageState extends State<HomePage>
     Uri.parse(WebSocketRouter.websocket),
   );
 
-
   late var _post = <Dismissible>[
     Dismissible(
       key: UniqueKey(),
       onDismissed: (DismissDirection direction) {
         _channel.sink.add(jsonEncode({"request_post": 1}));
       },
-      child: DraggableCard(child: PostIt(content: "Hello world")),
+      child: PostIt(content: "Hello world"),
     ),
   ];
 
@@ -90,35 +89,34 @@ class _HomePageState extends State<HomePage>
   void initState() {
     super.initState();
 
-    _animationController =
-    AnimationController(vsync: this, duration: Duration(milliseconds: 500))
-      ..addListener(() {
-        setState(() {});
-      });
-    _animateIcon =
-        Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
-
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500),
+    )..addListener(() {
+      setState(() {});
+    });
+    _animateIcon = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(_animationController);
 
     _channel.stream.listen((message) {
       setState(() {
         _post =
-
             [
               Dismissible(
                 key: UniqueKey(),
                 onDismissed: (DismissDirection direction) {
                   _channel.sink.add(jsonEncode({"request_post": 1}));
                 },
-                child: DraggableCard(
-                  child: PostIt.fromJson(jsonDecode(message)),
-                ),
+                child: PostIt.fromJson(jsonDecode(message)),
               ),
-            ] + _post;
+            ] +
+            _post;
       });
     });
 
-    _channel.sink.add(jsonEncode({"request_post": 3})
-    );
+    _channel.sink.add(jsonEncode({"request_post": 3}));
   }
 
   animate() {
@@ -146,10 +144,7 @@ class _HomePageState extends State<HomePage>
         // TRY THIS: Try changing the color here to a specific color (to
         // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
         // change color while the other colors stay the same.
-        backgroundColor: Theme
-            .of(context)
-            .colorScheme
-            .inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
@@ -160,7 +155,7 @@ class _HomePageState extends State<HomePage>
             return CreatePostIt();
           }
 
-          return Stack(children: _post);
+          return Center(child: Stack(children: _post));
         },
       ),
 
@@ -168,7 +163,9 @@ class _HomePageState extends State<HomePage>
         onPressed: animate,
         tooltip: 'Create new post-it',
         child: AnimatedIcon(
-            icon: AnimatedIcons.menu_close, progress: _animateIcon), // icon used
+          icon: AnimatedIcons.menu_close,
+          progress: _animateIcon,
+        ), // icon used
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }

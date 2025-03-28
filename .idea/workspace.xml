@@ -6,6 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="e8adb38e-3bf3-48bc-ba13-da25b3f6da3b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/phantom_flutter/lib/component/postit.dart" beforeDir="false" afterPath="$PROJECT_DIR$/phantom_flutter/lib/component/postit.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/phantom_flutter/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/phantom_flutter/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/phantom_flutter/lib/router.dart" beforeDir="false" afterPath="$PROJECT_DIR$/phantom_flutter/lib/router.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,8 +115,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-gosdk-d297c17c1fbd-57c114c3cede-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-243.25659.52" />
-        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-GO-243.25659.52" />
+        <option value="bundled-gosdk-d297c17c1fbd-57c114c3cede-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-243.26053.20" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-GO-243.26053.20" />
       </set>
     </attachedChunks>
   </component>
